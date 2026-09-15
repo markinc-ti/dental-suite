@@ -1,0 +1,85 @@
+<Window x:Class="DentalSuiteClient.NewPatientDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Nuevo paciente" Height="820" Width="480"
+        WindowStartupLocation="CenterOwner" ResizeMode="CanResizeWithGrip"
+        MinHeight="500" MinWidth="420" Icon="tooth.ico">
+    <DockPanel Margin="16">
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="Cancelar" Width="90" Height="30" Click="OnCancelClick"/>
+            <Button Content="Guardar" Width="90" Height="30" Margin="8,0,0,0" Click="OnSaveClick"/>
+        </StackPanel>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <TextBlock Text="Datos personales" FontWeight="Bold" FontSize="14" Foreground="#8A1538" Margin="0,0,0,8"/>
+
+                <TextBlock Text="Nombre(s)"/>
+                <TextBox x:Name="FirstNameBox" Height="28" Margin="0,4,0,10"/>
+
+                <TextBlock Text="Apellidos"/>
+                <TextBox x:Name="LastNameBox" Height="28" Margin="0,4,0,10"/>
+
+                <TextBlock Text="Teléfono"/>
+                <TextBox x:Name="PhoneBox" Height="28" Margin="0,4,0,10"/>
+
+                <TextBlock Text="Correo"/>
+                <TextBox x:Name="EmailBox" Height="28" Margin="0,4,0,10"/>
+
+                <TextBlock Text="Dirección"/>
+                <TextBox x:Name="AddressBox" Height="28" Margin="0,4,0,10"/>
+
+                <TextBlock Text="Doctor principal (opcional)"/>
+                <ComboBox x:Name="PrimaryDoctorComboBox" Height="28" Margin="0,4,0,16" DisplayMemberPath="FullName"/>
+
+                <Rectangle Height="1" Fill="#DDDDDD" Margin="0,0,0,16"/>
+
+                <TextBlock Text="Contacto de emergencia" FontWeight="Bold" FontSize="14" Foreground="#8A1538" Margin="0,0,0,8"/>
+
+                <TextBlock Text="Nombre"/>
+                <TextBox x:Name="EmergencyNameBox" Height="28" Margin="0,4,0,10"/>
+
+                <TextBlock Text="Teléfono"/>
+                <TextBox x:Name="EmergencyPhoneBox" Height="28" Margin="0,4,0,10"/>
+
+                <TextBlock Text="Parentesco / relación"/>
+                <TextBox x:Name="EmergencyRelationshipBox" Height="28" Margin="0,4,0,16"/>
+
+                <StackPanel x:Name="DiagnosisSection">
+                    <Rectangle Height="1" Fill="#DDDDDD" Margin="0,0,0,16"/>
+
+                    <TextBlock Text="Primera cita" FontWeight="Bold" FontSize="14" Foreground="#8A1538" Margin="0,0,0,8"/>
+
+                    <TextBlock Text="Diagnóstico inicial (opcional)"/>
+                    <TextBox x:Name="DiagnosisBox" Height="80" Margin="0,4,0,10"
+                             TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+
+                    <CheckBox x:Name="ScheduleFirstVisitCheck" Content="Agregar esta primera cita al calendario"
+                              Margin="0,0,0,10" Checked="OnScheduleFirstVisitChanged" Unchecked="OnScheduleFirstVisitChanged"/>
+
+                    <StackPanel x:Name="FirstVisitFields" Visibility="Collapsed">
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Fecha"/>
+                                <DatePicker x:Name="FirstVisitDatePicker" Margin="0,4,0,0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Hora (HH:mm)"/>
+                                <TextBox x:Name="FirstVisitTimeBox" Height="28" Text="10:00" Margin="0,4,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                        <TextBlock Text="(Necesita un doctor principal elegido arriba)"
+                                   Foreground="Gray" FontSize="11" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

@@ -1,0 +1,25 @@
+<Window x:Class="DentalSuiteClient.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Dental Suite — Iniciar sesión" Height="380" Width="380"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip"
+        MinHeight="320" MinWidth="340" Icon="tooth.ico">
+    <DockPanel Margin="24">
+        <Button DockPanel.Dock="Bottom" Content="Iniciar sesión" Height="32" Margin="0,12,0,0" Click="OnLoginClick"/>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="Dental Suite" FontSize="22" FontWeight="Bold" Foreground="#8A1538"/>
+                <TextBlock Text="Inicia sesión para continuar." Margin="0,4,0,20"/>
+
+                <TextBlock Text="Correo o teléfono"/>
+                <TextBox x:Name="UsernameBox" Height="28" Margin="0,4,0,10" KeyUp="OnFieldKeyUp"/>
+
+                <TextBlock Text="Contraseña"/>
+                <PasswordBox x:Name="PasswordBox" Height="28" Margin="0,4,0,10" KeyUp="OnFieldKeyUp"/>
+
+                <TextBlock x:Name="StatusText" Foreground="Red" TextWrapping="Wrap" Margin="0,4,0,0"/>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

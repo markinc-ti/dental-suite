@@ -1,0 +1,14 @@
+# Compilados / generados — se regeneran solos con build_all.bat
+windows-client-prototype/**/bin/
+windows-client-prototype/**/obj/
+windows-client-prototype/DentalSuiteClient/publish/
+backend/python-runtime/
+installer/installer_output/
+
+# Base de datos local y subidas (solo existen en cada PC, no en el repo)
+backend/dental_suite.db
+backend/uploads/
+
+# Windows / editor
+*.user
+.vs/

@@ -1,0 +1,31 @@
+<Window x:Class="DentalSuiteClient.DoctorsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Dental Suite — Doctores" Height="500" Width="720"
+        WindowStartupLocation="CenterScreen" Icon="tooth.ico">
+    <DockPanel Margin="12">
+        <Border DockPanel.Dock="Top" Background="#8A1538" Padding="10" Margin="0,0,0,10">
+            <TextBlock Text="Doctores" Foreground="White" FontSize="18" FontWeight="Bold"/>
+        </Border>
+
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+            <Button Content="Nuevo doctor" Width="120" Height="28" Click="OnNewDoctorClick"/>
+            <Button Content="Editar" Width="90" Height="28" Margin="8,0,0,0" Click="OnEditDoctorClick"/>
+            <Button Content="Eliminar" Width="90" Height="28" Margin="8,0,0,0" Click="OnDeleteDoctorClick"/>
+            <Button Content="Refrescar" Width="90" Height="28" Margin="8,0,0,0" Click="OnRefreshClick"/>
+            <Button Content="Cerrar" Width="90" Height="28" Margin="24,0,0,0" Click="OnCloseClick"/>
+        </StackPanel>
+
+        <ListView x:Name="DoctorsList">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Nombre" Width="180" DisplayMemberBinding="{Binding FullName}"/>
+                    <GridViewColumn Header="Usuario" Width="150" DisplayMemberBinding="{Binding Username}"/>
+                    <GridViewColumn Header="Teléfono" Width="110" DisplayMemberBinding="{Binding Phone}"/>
+                    <GridViewColumn Header="Especialidad" Width="150" DisplayMemberBinding="{Binding Specialty}"/>
+                    <GridViewColumn Header="Cédula/Certificado" Width="140" DisplayMemberBinding="{Binding ProfessionalLicense}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</Window>

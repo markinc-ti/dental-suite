@@ -1,0 +1,52 @@
+<Window x:Class="DentalSuiteClient.NewAppointmentDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Nueva cita" Height="560" Width="420"
+        WindowStartupLocation="CenterOwner" ResizeMode="CanResizeWithGrip"
+        MinHeight="420" MinWidth="380">
+    <DockPanel Margin="16">
+        <!-- Los botones quedan siempre visibles abajo, sin importar
+             cuánto ocupe el resto del formulario ni el tamaño de pantalla. -->
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal"
+                    HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="Cancelar" Width="90" Height="30" Click="OnCancelClick"/>
+            <Button Content="Agendar" Width="90" Height="30" Margin="8,0,0,0" Click="OnSaveClick"/>
+        </StackPanel>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="Buscar paciente"/>
+                <StackPanel Orientation="Horizontal" Margin="0,4,0,4">
+                    <TextBox x:Name="SearchBox" Width="220" Height="28" KeyUp="OnSearchKeyUp"/>
+                    <Button Content="Buscar" Width="80" Height="28" Margin="8,0,0,0" Click="OnSearchClick"/>
+                </StackPanel>
+                <ListBox x:Name="PatientList" Height="100" DisplayMemberPath="FullName" Margin="0,0,0,12"/>
+
+                <TextBlock Text="Fecha" Margin="0,0,0,2"/>
+                <DatePicker x:Name="DatePickerControl" Margin="0,0,0,12"/>
+
+                <TextBlock Text="Doctor"/>
+                <ComboBox x:Name="DoctorComboBox" Height="28" Margin="0,4,0,12" DisplayMemberPath="FullName"/>
+
+                <Grid Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Hora inicio (HH:mm)"/>
+                        <TextBox x:Name="StartTimeBox" Height="28" Text="09:00"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Duración (minutos)"/>
+                        <TextBox x:Name="DurationBox" Height="28" Text="30"/>
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Text="Motivo"/>
+                <TextBox x:Name="ReasonBox" Height="28" Margin="0,4,0,4"/>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

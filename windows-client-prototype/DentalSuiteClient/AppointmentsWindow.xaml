@@ -1,0 +1,36 @@
+<Window x:Class="DentalSuiteClient.AppointmentsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Dental Suite — Agenda" Height="600" Width="700"
+        WindowStartupLocation="CenterScreen" Icon="tooth.ico">
+    <DockPanel Margin="12">
+        <Border DockPanel.Dock="Top" Background="#8A1538" Padding="10" Margin="0,0,0,10">
+            <TextBlock Text="Agenda" Foreground="White" FontSize="18" FontWeight="Bold"/>
+        </Border>
+
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Día:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <DatePicker x:Name="DayPicker" Width="140" SelectedDateChanged="OnDayChanged"/>
+            <Button Content="Nueva cita" Width="120" Height="28" Margin="16,0,0,0" Click="OnNewAppointmentClick"/>
+            <Button Content="Refrescar" Width="90" Height="28" Margin="8,0,0,0" Click="OnRefreshClick"/>
+        </StackPanel>
+
+        <ListView x:Name="AppointmentsList">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Hora" Width="140">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding TimeRangeText}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Paciente" Width="200" DisplayMemberBinding="{Binding PatientName}"/>
+                    <GridViewColumn Header="Doctor" Width="160" DisplayMemberBinding="{Binding DoctorName}"/>
+                    <GridViewColumn Header="Motivo" Width="180" DisplayMemberBinding="{Binding Reason}"/>
+                    <GridViewColumn Header="Estado" Width="120" DisplayMemberBinding="{Binding StatusText}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</Window>

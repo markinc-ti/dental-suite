@@ -1,0 +1,10 @@
+<Window x:Class="DentalSuiteClient.ChooseImageDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Elegir imagen" Height="400" Width="320"
+        WindowStartupLocation="CenterOwner">
+    <DockPanel Margin="12">
+        <Button DockPanel.Dock="Bottom" Content="Seleccionar" Height="32" Margin="0,10,0,0" Click="OnSelectClick"/>
+        <ListBox x:Name="TeethList" DisplayMemberPath="Label"/>
+    </DockPanel>
+</Window>

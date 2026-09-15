@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <ApplicationIcon>tooth.ico</ApplicationIcon>
+    <!-- x86 porque el sensor Runyes (referenciado desde este proyecto)
+         depende de DLLs nativas de 32 bits. -->
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="tooth.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RunyesSensorPrototype\RunyesSensorPrototype.csproj" />
+    <ProjectReference Include="..\WoodpeckerSensorPrototype\WoodpeckerSensorPrototype.csproj" />
+    <ProjectReference Include="..\UvcCameraPrototype\UvcCameraPrototype.csproj" />
+  </ItemGroup>
+
+</Project>

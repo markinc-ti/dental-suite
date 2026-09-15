@@ -1,0 +1,14 @@
+C:\Users\Alien\Documents\dental-suite\dental-suite\license-tool\LicenseGenerator\bin\Debug\net8.0\LicenseGenerator.exe
+C:\Users\Alien\Documents\dental-suite\dental-suite\license-tool\LicenseGenerator\bin\Debug\net8.0\LicenseGenerator.deps.json
+C:\Users\Alien\Documents\dental-suite\dental-suite\license-tool\LicenseGenerator\bin\Debug\net8.0\LicenseGenerator.runtimeconfig.json
+C:\Users\Alien\Documents\dental-suite\dental-suite\license-tool\LicenseGenerator\bin\Debug\net8.0\LicenseGenerator.dll
+C:\Users\Alien\Documents\dental-suite\dental-suite\license-tool\LicenseGenerator\bin\Debug\net8.0\LicenseGenerator.pdb
+C:\Users\Alien\Documents\dental-suite\dental-suite\license-tool\LicenseGenerator\obj\Debug\net8.0\LicenseGenerator.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Alien\Documents\dental-suite\dental-suite\license-tool\LicenseGenerator\obj\Debug\net8.0\LicenseGenerator.AssemblyInfoInputs.cache
+C:\Users\Alien\Documents\dental-suite\dental-suite\license-tool\LicenseGenerator\obj\Debug\net8.0\LicenseGenerator.AssemblyInfo.cs
+C:\Users\Alien\Documents\dental-suite\dental-suite\license-tool\LicenseGenerator\obj\Debug\net8.0\LicenseGenerator.csproj.CoreCompileInputs.cache
+C:\Users\Alien\Documents\dental-suite\dental-suite\license-tool\LicenseGenerator\obj\Debug\net8.0\LicenseGenerator.dll
+C:\Users\Alien\Documents\dental-suite\dental-suite\license-tool\LicenseGenerator\obj\Debug\net8.0\refint\LicenseGenerator.dll
+C:\Users\Alien\Documents\dental-suite\dental-suite\license-tool\LicenseGenerator\obj\Debug\net8.0\LicenseGenerator.pdb
+C:\Users\Alien\Documents\dental-suite\dental-suite\license-tool\LicenseGenerator\obj\Debug\net8.0\LicenseGenerator.genruntimeconfig.cache
+C:\Users\Alien\Documents\dental-suite\dental-suite\license-tool\LicenseGenerator\obj\Debug\net8.0\ref\LicenseGenerator.dll

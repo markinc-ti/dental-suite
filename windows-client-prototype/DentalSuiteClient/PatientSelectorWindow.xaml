@@ -1,0 +1,57 @@
+<Window x:Class="DentalSuiteClient.PatientSelectorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Dental Suite — Pacientes" Height="540" Width="1000"
+        WindowStartupLocation="CenterScreen" Icon="tooth.ico">
+    <DockPanel Margin="12">
+        <Border DockPanel.Dock="Top" Background="#8A1538" Padding="10" Margin="0,0,0,10">
+            <Grid>
+                <TextBlock Text="Dental Suite" Foreground="White" FontSize="18" FontWeight="Bold"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock x:Name="CurrentUserText" Foreground="White" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                    <Button Content="Cerrar sesión" Padding="8,2" Click="OnSignOutClick"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBox x:Name="SearchBox" Width="260" Height="28" VerticalContentAlignment="Center"
+                     KeyUp="SearchBox_KeyUp"/>
+            <Button Content="Buscar" Width="80" Height="28" Margin="8,0,0,0" Click="OnSearchClick"/>
+            <Button Content="Nuevo paciente" Width="120" Height="28" Margin="8,0,0,0" Click="OnNewPatientClick"/>
+            <Button Content="Editar" Width="90" Height="28" Margin="8,0,0,0" Click="OnEditPatientClick"/>
+            <Button Content="Eliminar" Width="90" Height="28" Margin="8,0,0,0" Click="OnDeletePatientClick"/>
+            <Button Content="Agenda" Width="90" Height="28" Margin="24,0,0,0" Click="OnOpenAgendaClick"/>
+            <Button x:Name="CalendarButton" Content="Calendario" Width="90" Height="28" Margin="8,0,0,0" Click="OnOpenCalendarClick"/>
+            <Button x:Name="DoctorsButton" Content="Doctores" Width="90" Height="28" Margin="8,0,0,0" Click="OnOpenDoctorsClick"/>
+            <Button Content="Tratamientos" Width="110" Height="28" Margin="8,0,0,0" Click="OnOpenTreatmentsClick"/>
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Filtrar por estatus:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <ComboBox x:Name="StatusFilterComboBox" Width="220" SelectionChanged="OnStatusFilterChanged">
+                <ComboBoxItem Content="Todos"/>
+                <ComboBoxItem Content="En tratamiento"/>
+                <ComboBoxItem Content="Sin tratamiento activo"/>
+                <ComboBoxItem Content="Tratamiento completado"/>
+            </ComboBox>
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,10,0,0">
+            <Button Content="Abrir odontograma" Height="36" Width="180" Click="OnOpenOdontogramClick"
+                    IsEnabled="{Binding ElementName=PatientList, Path=SelectedItem, Converter={StaticResource NotNullToBoolConverter}}"/>
+            <Button Content="Ver fotos / radiografías" Height="36" Width="180" Margin="8,0,0,0" Click="OnViewGalleryClick"
+                    IsEnabled="{Binding ElementName=PatientList, Path=SelectedItem, Converter={StaticResource NotNullToBoolConverter}}"/>
+        </StackPanel>
+
+        <ListView x:Name="PatientList">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Paciente" Width="220" DisplayMemberBinding="{Binding FullName}"/>
+                    <GridViewColumn Header="Doctor principal" Width="180" DisplayMemberBinding="{Binding PrimaryDoctorName}"/>
+                    <GridViewColumn Header="Estatus" Width="320" DisplayMemberBinding="{Binding TreatmentStatusText}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</Window>

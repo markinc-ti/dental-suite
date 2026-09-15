@@ -1,0 +1,28 @@
+<Window x:Class="DentalSuiteClient.TreatmentTypesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Dental Suite — Tipos de tratamiento" Height="480" Width="650"
+        WindowStartupLocation="CenterScreen" Icon="tooth.ico">
+    <DockPanel Margin="12">
+        <Border DockPanel.Dock="Top" Background="#8A1538" Padding="10" Margin="0,0,0,10">
+            <TextBlock Text="Tipos de tratamiento (catálogo)" Foreground="White" FontSize="18" FontWeight="Bold"/>
+        </Border>
+
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+            <Button Content="Nuevo tipo" Width="120" Height="28" Click="OnNewTypeClick"/>
+            <Button Content="Refrescar" Width="90" Height="28" Margin="8,0,0,0" Click="OnRefreshClick"/>
+            <Button Content="Cerrar" Width="90" Height="28" Margin="24,0,0,0" Click="OnCloseClick"/>
+        </StackPanel>
+
+        <ListView x:Name="TypesList">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Nombre" Width="200" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Sesiones" Width="80" DisplayMemberBinding="{Binding DefaultSessionCount}"/>
+                    <GridViewColumn Header="Intervalo (días)" Width="120" DisplayMemberBinding="{Binding DefaultIntervalDays}"/>
+                    <GridViewColumn Header="Costo por defecto" Width="130" DisplayMemberBinding="{Binding DefaultCost}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</Window>

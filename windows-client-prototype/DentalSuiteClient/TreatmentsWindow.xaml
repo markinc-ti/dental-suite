@@ -1,0 +1,42 @@
+<Window x:Class="DentalSuiteClient.TreatmentsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Dental Suite — Tratamientos" Height="600" Width="900"
+        WindowStartupLocation="CenterScreen" Icon="tooth.ico">
+    <DockPanel Margin="12">
+        <Border DockPanel.Dock="Top" Background="#8A1538" Padding="10" Margin="0,0,0,10">
+            <TextBlock Text="Tratamientos" Foreground="White" FontSize="18" FontWeight="Bold"/>
+        </Border>
+
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+            <Button Content="Nuevo tratamiento" Width="140" Height="28" Click="OnNewTreatmentClick"/>
+            <Button x:Name="TreatmentTypesButton" Content="Tipos de tratamiento" Width="150" Height="28"
+                    Margin="8,0,0,0" Click="OnManageTypesClick"/>
+            <Button Content="Refrescar" Width="90" Height="28" Margin="8,0,0,0" Click="OnRefreshClick"/>
+            <Button Content="Cerrar" Width="90" Height="28" Margin="24,0,0,0" Click="OnCloseClick"/>
+        </StackPanel>
+
+        <ListView x:Name="TreatmentsList" MouseDoubleClick="OnTreatmentDoubleClick">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Paciente" Width="160" DisplayMemberBinding="{Binding PatientName}"/>
+                    <GridViewColumn Header="Tratamiento" Width="180" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Doctor" Width="140" DisplayMemberBinding="{Binding DoctorName}"/>
+                    <GridViewColumn Header="Costo estimado" Width="110" DisplayMemberBinding="{Binding CostText}"/>
+                    <GridViewColumn Header="Progreso" Width="200">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <ProgressBar Value="{Binding ProgressPercent, Mode=OneWay}"
+                                                 Width="110" Height="16" Margin="0,0,8,0"/>
+                                    <TextBlock Text="{Binding ProgressText}" VerticalAlignment="Center" FontSize="11"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Estado" Width="100" DisplayMemberBinding="{Binding StatusText}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</Window>

@@ -1,0 +1,34 @@
+<Window x:Class="DentalSuiteClient.AdminSetupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Dental Suite — Configuración inicial" Height="480" Width="420"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip"
+        MinHeight="420" MinWidth="380" Icon="tooth.ico">
+    <DockPanel Margin="24">
+        <Button DockPanel.Dock="Bottom" Content="Crear administrador" Height="32"
+                Margin="0,12,0,0" Click="OnCreateClick"/>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="Crear cuenta de administrador" FontSize="18" FontWeight="Bold" Foreground="#8A1538"
+                           TextWrapping="Wrap"/>
+                <TextBlock Text="Esta es la primera vez que se abre Dental Suite en este equipo. Crea la cuenta de administrador antes de continuar."
+                           TextWrapping="Wrap" Margin="0,8,0,20"/>
+
+                <TextBlock Text="Nombre completo"/>
+                <TextBox x:Name="FullNameBox" Height="28" Margin="0,4,0,10"/>
+
+                <TextBlock Text="Correo o teléfono (será tu usuario)"/>
+                <TextBox x:Name="UsernameBox" Height="28" Margin="0,4,0,10"/>
+
+                <TextBlock Text="Contraseña"/>
+                <PasswordBox x:Name="PasswordBox" Height="28" Margin="0,4,0,10"/>
+
+                <TextBlock Text="Confirmar contraseña"/>
+                <PasswordBox x:Name="ConfirmPasswordBox" Height="28" Margin="0,4,0,10"/>
+
+                <TextBlock x:Name="StatusText" Foreground="Red" TextWrapping="Wrap" Margin="0,4,0,0"/>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>
