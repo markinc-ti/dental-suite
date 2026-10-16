@@ -30,8 +30,9 @@ namespace DentalSuiteClient.Cameras
     ///   alguno y el cuadro se descarta (igual que hace EndoCamera).
     ///
     ///   Estado (llega al puerto local 5555): paquetes de 12 bytes.
-    ///       [0] == 0x55 → datos del sensor de orientación (se ignoran)
-    ///       [10] == 1   → se presionó el BOTÓN FÍSICO de la cámara
+    ///       [0] == 0x55 → trae datos del sensor de orientación
+    ///       [10] == 1   → BOTÓN FÍSICO presionado (en cualquier paquete
+    ///                     de 12 bytes, incluidos los que empiezan con 0x55)
     ///                     (EndoCamera lo usa para tomar foto)
     /// </summary>
     public sealed class VvDentalWifiCamera : IDisposable
@@ -53,7 +54,6 @@ namespace DentalSuiteClient.Cameras
         private UdpClient? _videoSocket;
         private UdpClient? _statusSocket;
         private CancellationTokenSource? _cts;
-        private DateTime _lastButtonUtc = DateTime.MinValue;
 
         /// <summary>Se dispara con los bytes de cada cuadro JPEG completo
         /// (en un hilo de fondo — hay que pasar al hilo de la ventana para
@@ -213,25 +213,81 @@ namespace DentalSuiteClient.Cameras
                 catch (ObjectDisposedException) { return; }
                 catch (SocketException) { continue; }
 
-                if (IsShutterPacket(packet.Buffer))
-                {
-                    // La cámara puede repetir el aviso varias veces por
-                    // una sola pulsación — se ignoran repeticiones dentro
-                    // de 700 ms para no tomar fotos dobles.
-                    var now = DateTime.UtcNow;
-                    if ((now - _lastButtonUtc).TotalMilliseconds < 700) continue;
-                    _lastButtonUtc = now;
+                LogUnusualStatusPacket(packet.Buffer);
 
+                if (_buttonDetector.Process(packet.Buffer, DateTime.UtcNow))
+                {
                     try { ShutterButtonPressed?.Invoke(); }
                     catch { }
                 }
             }
         }
 
-        /// <summary>Paquete de estado de 12 bytes que indica botón
-        /// presionado (no es de orientación y trae el byte 10 en 1).</summary>
+        private readonly ShutterDetector _buttonDetector = new();
+        private int _loggedPackets;
+
+        /// <summary>
+        /// Guarda en %LOCALAPPDATA%\DentalSuite\camara-wifi.log los
+        /// paquetes de estado que no son de orientación "normal" (máx. 200),
+        /// para poder diagnosticar si algún modelo manda el botón distinto.
+        /// </summary>
+        private void LogUnusualStatusPacket(byte[] data)
+        {
+            if (_loggedPackets >= 200) return;
+            if (data.Length == 12 && data[10] == 0) return; // orientación sin botón: lo normal
+            _loggedPackets++;
+            try
+            {
+                string dir = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DentalSuite");
+                Directory.CreateDirectory(dir);
+                File.AppendAllText(Path.Combine(dir, "camara-wifi.log"),
+                    $"{DateTime.Now:HH:mm:ss.fff} estado[{data.Length}]: {Convert.ToHexString(data)}{Environment.NewLine}");
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// Igual que EndoCamera: CUALQUIER paquete de estado de 12 bytes con
+        /// el byte 10 en 1 significa botón presionado — también los que
+        /// empiezan con 0x55 (que además traen la orientación).
+        /// </summary>
         public static bool IsShutterPacket(byte[] data) =>
-            data.Length == 12 && data[0] != 0x55 && data[10] == 1;
+            data.Length == 12 && data[10] == 1;
+
+        /// <summary>
+        /// Convierte los paquetes de estado en "pulsaciones": mientras el
+        /// botón se mantiene oprimido la cámara puede seguir mandando el
+        /// byte en 1 en cada paquete; solo cuenta como UNA foto. Una nueva
+        /// pulsación se reconoce cuando llega un paquete sin botón (soltó)
+        /// o cuando pasan más de 400 ms sin avisos de botón.
+        /// </summary>
+        public sealed class ShutterDetector
+        {
+            private DateTime _lastPressedPacketUtc = DateTime.MinValue;
+            private DateTime _lastFireUtc = DateTime.MinValue;
+
+            public bool Process(byte[] data, DateTime nowUtc)
+            {
+                if (data.Length != 12)
+                    return false;
+
+                if (!IsShutterPacket(data))
+                {
+                    _lastPressedPacketUtc = DateTime.MinValue; // soltó el botón
+                    return false;
+                }
+
+                bool newPress = (nowUtc - _lastPressedPacketUtc).TotalMilliseconds > 400;
+                _lastPressedPacketUtc = nowUtc;
+
+                if (!newPress || (nowUtc - _lastFireUtc).TotalMilliseconds < 700)
+                    return false;
+
+                _lastFireUtc = nowUtc;
+                return true;
+            }
+        }
 
         public void Dispose() => Stop();
 
