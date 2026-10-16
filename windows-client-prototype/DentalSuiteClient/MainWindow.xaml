@@ -57,6 +57,8 @@
                     <TextBlock Text="{Binding PatientId}" Foreground="White"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Historial" Padding="10,4" Margin="0,0,8,0" Click="OnViewHistoryClick"/>
+                    <Button Content="Nuevo odontograma" Padding="10,4" Margin="0,0,8,0" Click="OnNewOdontogramClick"/>
                     <Button Content="Comparar" Padding="10,4" Margin="0,0,8,0" Click="OnCompareClick"/>
                     <Button Content="← Volver a pacientes" Padding="10,4" Click="OnBackToPatientsClick"/>
                 </StackPanel>
@@ -223,7 +225,7 @@
             <!-- ============ Zona inferior: casillas de captura (radiografía y foto por diente) ============ -->
             <Border Grid.Row="1" Margin="10" Padding="10" Background="Black">
                 <Grid>
-                    <TextBlock Text="Selecciona uno o más dientes arriba: aparecerán aquí sus casillas de radiografía y foto, listas para capturar."
+                    <TextBlock Text="Selecciona uno o más dientes arriba: aparecerán aquí sus casillas de radiografía, foto y video, listas para capturar."
                                Foreground="Gray" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"
                                Visibility="{Binding CaptureSlots.Count, Converter={StaticResource ZeroToVisibilityConverter}}"/>
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -243,6 +245,10 @@
                                         <TextBlock Text="{Binding DisplayNumber}" Foreground="White"
                                                    FontWeight="Bold" Margin="4"
                                                    HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                        <Button Content="✕" Width="20" Height="20" Padding="0" FontSize="11"
+                                                HorizontalAlignment="Right" VerticalAlignment="Top" Margin="2"
+                                                Visibility="{Binding IsCaptured, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                Click="OnDeleteSlotClick"/>
                                         <Border Background="#B0000000" VerticalAlignment="Bottom" Padding="2">
                                             <TextBlock Text="{Binding TypeLabel}" Foreground="White"
                                                        FontSize="10" HorizontalAlignment="Center"/>

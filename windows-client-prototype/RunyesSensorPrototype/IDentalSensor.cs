@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 
 namespace RunyesSensorPrototype
 {
@@ -23,8 +24,18 @@ namespace RunyesSensorPrototype
         /// <summary>
         /// Bloquea hasta que el sensor detecta el disparo de rayos X y
         /// entrega la imagen capturada ya corregida (gain/offset aplicados).
+        ///
+        /// onStatus (opcional) se llama con mensajes cortos para mostrar
+        /// en pantalla mientras se espera -- ej. "Esperando disparo...",
+        /// "Transfiriendo imagen..." -- igual que hace el software oficial
+        /// de Runyes. Puede llegar desde un hilo distinto al de la UI:
+        /// quien lo use debe despachar al hilo de UI si va a tocar
+        /// controles visuales directamente.
+        ///
+        /// cancellationToken (opcional) permite abortar la espera del
+        /// disparo desde afuera (ej. si el usuario le da "Cancelar").
         /// </summary>
-        CapturedImage CaptureImage();
+        CapturedImage CaptureImage(Action<string>? onStatus = null, CancellationToken cancellationToken = default);
     }
 
     public sealed class CapturedImage

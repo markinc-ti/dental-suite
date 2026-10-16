@@ -25,8 +25,9 @@ namespace DentalSuiteClient
                     ? $"{CurrentSession.User.FullName} ({(CurrentSession.IsAdmin ? "Administrador" : "Doctor")})"
                     : "";
                 DoctorsButton.Visibility = CurrentSession.IsAdmin ? Visibility.Visible : Visibility.Collapsed;
+                ChangeServerButton.Visibility = CurrentSession.IsAdmin ? Visibility.Visible : Visibility.Collapsed;
                 // El calendario lo ve cualquier rol; solo la gestión de
-                // doctores queda exclusiva del administrador.
+                // doctores y del servidor queda exclusiva del administrador.
             };
             // La app ya no se cierra sola solo porque esta ventana se
             // cierre (ShutdownMode="OnExplicitShutdown", ver App.xaml) —
@@ -233,6 +234,27 @@ namespace DentalSuiteClient
         {
             var treatments = new TreatmentsWindow { Owner = this };
             treatments.ShowDialog();
+        }
+
+        private void OnChangeServerClick(object sender, RoutedEventArgs e)
+        {
+            var confirm = MessageBox.Show(
+                "Esto va a cerrar la sesión y reiniciar la app para configurar un servidor distinto "
+                + "(por ejemplo, pasar de 'solo esta PC' a uno en la nube, o cambiar de servidor). ¿Continuar?",
+                "Cambiar servidor", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (confirm != MessageBoxResult.Yes)
+                return;
+
+            ServerConfig.Clear();
+            CurrentSession.SignOut();
+
+            string? exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
+            if (!string.IsNullOrEmpty(exePath))
+                System.Diagnostics.Process.Start(exePath);
+
+            _isNavigatingAway = true;
+            Application.Current.Shutdown();
         }
 
         private void OnSignOutClick(object sender, RoutedEventArgs e)

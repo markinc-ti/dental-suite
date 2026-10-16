@@ -182,3 +182,53 @@ incluyo dentro de este paquete. El script `installer.iss` tiene comentada
 la línea para agregarlas — descoméntala una vez que las copies a
 `installer\sensor-dlls\` (sacándolas del instalador original de Runyes,
 carpeta `app\Sensor\`).
+
+## Funciona sin internet y conserva los datos al reinstalar (v0.2.0)
+
+- **Modo local por defecto.** La primera vez que se abre, Dental Suite
+  arranca su backend local (127.0.0.1:8003) sin preguntar nada. Si una PC
+  estaba configurada contra Render y no hay conexión, ofrece cambiarse a
+  modo local en vez de no abrir.
+- **Todos los datos viven fuera de la carpeta del programa**, en
+  `%LOCALAPPDATA%\DentalSuite\`:
+  `dental_suite.db`, `uploads\` (fotos/radiografías), `license.key`,
+  `server-config.json`, `camera-config.json`, `SensorCalibration\`.
+  El instalador reemplaza `C:\Program Files (x86)\Dental Suite\` pero
+  nunca toca esa carpeta, así que reinstalar/actualizar no borra nada.
+  (Antes las imágenes subidas quedaban dentro de la carpeta del
+  programa; `app/paths.py` las rescata automáticamente la primera vez.)
+- **Respaldo diario automático** en
+  `Documentos\Dental Suite - Respaldos\` (últimos 30 días de la base +
+  copia de todas las imágenes). Para restaurar: cerrar Dental Suite y
+  copiar el `.db` del día deseado como
+  `%LOCALAPPDATA%\DentalSuite\dental_suite.db`.
+- **Columnas nuevas sin perder datos.** `app/schema_upgrade.py` agrega
+  solo las columnas que falten al arrancar (create_all no lo hace).
+- **Traer los datos de Render a la PC:** doble clic en
+  `C:\Program Files (x86)\Dental Suite\migrar_desde_render.bat` y pegar la
+  *External Database URL* de la base PostgreSQL de Render. Copia todas
+  las tablas, baja las imágenes que todavía existan en Render y deja la
+  app en modo local.
+
+## Cámara WiFi VVDental EC-3 (red "EC-3-XXXX")
+
+Integrada en la ventana de captura (foto y video) como
+"📶 Cámara WiFi VVDental (EC-3)". No necesita EndoCamera.exe.
+
+- Protocolo (sacado de EndoCamera.exe): ver
+  `DentalSuiteClient/Cameras/VvDentalWifiCamera.cs`. UDP a
+  192.168.15.50:7020/7030, video JPEG fragmentado al puerto local 4444,
+  botón físico al 5555 (toma la foto / inicia-detiene el video).
+- **Cambio de WiFi automático** (`Cameras/WifiCameraNetwork.cs`):
+  - Con **un** adaptador WiFi: al elegir la cámara se conecta a
+    EC-3-XXXX y al cerrar la ventana regresa sola a la red anterior.
+    Dental Suite sigue funcionando porque ya no depende de internet.
+  - Con **dos** adaptadores (la tarjeta interna + un adaptador WiFi USB
+    de ~$150-250 MXN): usa el libre para la cámara y el WiFi de la
+    clínica nunca se desconecta.
+    Si con el segundo adaptador conectado se va el internet, en
+    PowerShell como administrador (cambia "Wi-Fi 2" por el nombre del
+    adaptador de la cámara):
+    `Set-NetIPInterface -InterfaceAlias "Wi-Fi 2" -InterfaceMetric 9000`
+- El instalador agrega la regla de Firewall "Dental Suite - Camara WiFi"
+  (UDP 4444/5555). EndoCamera debe estar cerrado (usa los mismos puertos).

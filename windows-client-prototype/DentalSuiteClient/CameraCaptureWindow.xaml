@@ -2,18 +2,40 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Captura de cámara intraoral" Height="650" Width="900"
-        WindowStartupLocation="CenterScreen" WindowState="Normal">
+        WindowStartupLocation="CenterScreen" WindowState="Normal"
+        PreviewKeyDown="OnWindowKeyDown">
     <DockPanel Margin="12">
-        <TextBlock DockPanel.Dock="Top" Text="Vista previa en vivo — acomoda la cámara y presiona Guardar"
-                   FontWeight="Bold" Margin="0,0,0,10"/>
+        <TextBlock x:Name="InstructionsText" DockPanel.Dock="Top"
+                   Text="Vista previa en vivo — acomoda la cámara y presiona Guardar"
+                   FontWeight="Bold" Margin="0,0,0,10" TextWrapping="Wrap"/>
 
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Content="Cancelar" Width="110" Height="34" Click="OnCancelClick"/>
-            <Button Content="Guardar" Width="110" Height="34" Margin="8,0,0,0" Click="OnSaveClick"/>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Cámara:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <ComboBox x:Name="CameraSelector" Width="320" SelectionChanged="OnCameraSelectionChanged"/>
+            <Button x:Name="RefreshDevicesButton" Content="Actualizar lista" Margin="8,0,0,0" Padding="8,2" Click="OnRefreshDevicesClick"/>
+            <CheckBox x:Name="MirrorCheckBox" Content="Espejo" VerticalAlignment="Center" Margin="16,0,0,0"
+                      Checked="OnMirrorChanged" Unchecked="OnMirrorChanged"/>
         </StackPanel>
 
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">
+            <TextBlock x:Name="StatusText" DockPanel.Dock="Left" Foreground="Gray" VerticalAlignment="Center"
+                       TextWrapping="Wrap" MaxWidth="420"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock x:Name="RecordingIndicator" Text="● Grabando..." Foreground="Red" FontWeight="Bold"
+                           VerticalAlignment="Center" Margin="0,0,16,0" Visibility="Collapsed"/>
+                <Button Content="Cancelar" Width="110" Height="34" Click="OnCancelClick"/>
+                <Button x:Name="PrimaryActionButton" Content="Guardar" Width="150" Height="34"
+                        Margin="8,0,0,0" Click="OnPrimaryActionClick"/>
+            </StackPanel>
+        </DockPanel>
+
         <Border Background="Black" BorderBrush="Gray" BorderThickness="1">
-            <Image x:Name="PreviewImage" Stretch="Uniform"/>
+            <Grid>
+                <Image x:Name="PreviewImage" Stretch="Uniform"/>
+                <TextBlock x:Name="OverlayText" Foreground="White" FontSize="16" TextWrapping="Wrap"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"
+                           Margin="40" Visibility="Collapsed"/>
+            </Grid>
         </Border>
     </DockPanel>
 </Window>

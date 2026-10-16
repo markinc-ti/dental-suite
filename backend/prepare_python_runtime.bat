@@ -60,6 +60,7 @@ echo.
 echo [6/6] Copiando el código del backend (app\ y run_server.py) al runtime...
 xcopy /e /i /y app %RUNTIME_DIR%\app
 copy /y run_server.py %RUNTIME_DIR%\run_server.py
+copy /y migrar_nube_a_local.py %RUNTIME_DIR%\migrar_nube_a_local.py
 
 echo.
 echo ============================================================

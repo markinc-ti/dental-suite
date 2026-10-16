@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <!-- Copia automáticamente cualquier .dll que pongas junto a este
+       archivo (sensor_io.dll, ImageCorrect.dll, Scilib21.dll) a la
+       carpeta de salida (bin\Debug\net8.0\) cada vez que compilas —
+       ahí es donde Windows las busca cuando corres el programa. -->
+  <ItemGroup>
+    <None Include="*.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- Copia las calibraciones ya conocidas (mismas que usa el
+       instalador final) a la carpeta de salida, para poder probar con
+       esta consola sin tener que compilar el instalador completo. -->
+  <ItemGroup>
+    <None Include="..\..\installer\sensor-calibration\Runyes\*">
+      <Link>SensorCalibration\Runyes\%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RunyesSensorPrototype\RunyesSensorPrototype.csproj" />
+  </ItemGroup>
+
+</Project>

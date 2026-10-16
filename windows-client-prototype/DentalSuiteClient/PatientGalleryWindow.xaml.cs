@@ -38,7 +38,12 @@ namespace DentalSuiteClient
                             ImagePath = slot.ImageUrl!,
                             ToothNumber = slot.ToothNumber,
                             ImageType = slot.ImageType,
-                            ImageTypeLabel = slot.ImageType == "photo" ? "Foto" : "Radiografía",
+                            ImageTypeLabel = slot.ImageType switch
+                            {
+                                "photo" => "Foto",
+                                "video" => "Video",
+                                _ => "Radiografía",
+                            },
                             CapturedAt = slot.CapturedAt,
                         });
                     }

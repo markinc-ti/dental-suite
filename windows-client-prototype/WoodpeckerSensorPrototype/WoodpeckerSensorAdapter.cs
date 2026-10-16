@@ -79,10 +79,12 @@ namespace WoodpeckerSensorPrototype
             return result == 0 || result == 1;
         }
 
-        public CapturedImage CaptureImage()
+        public CapturedImage CaptureImage(Action<string>? onStatus = null, System.Threading.CancellationToken cancellationToken = default)
         {
             if (!_initialized)
                 throw new InvalidOperationException("El sensor Woodpecker no está conectado.");
+
+            onStatus?.Invoke("Esperando disparo de rayos X...");
 
             _pendingCapture = new TaskCompletionSource<CapturedImage>();
 

@@ -66,8 +66,11 @@ namespace DentalSuiteClient
             }
         }
 
+        private bool _suppressToothSelectionSideEffects;
+
         private void OnToothPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
+            if (_suppressToothSelectionSideEffects) return;
             if (e.PropertyName != nameof(ToothSlot.IsSelected) || sender is not ToothSlot tooth)
                 return;
 
@@ -85,12 +88,88 @@ namespace DentalSuiteClient
                     DisplayNumber = tooth.DisplayNumber,
                     ImageType = CaptureImageType.Photo,
                 });
+                CaptureSlots.Add(new CaptureItem
+                {
+                    ToothNumber = tooth.ToothNumber,
+                    DisplayNumber = tooth.DisplayNumber,
+                    ImageType = CaptureImageType.Video,
+                });
             }
             else
             {
                 var toRemove = CaptureSlots.Where(c => c.ToothNumber == tooth.ToothNumber).ToList();
                 foreach (var item in toRemove)
                     CaptureSlots.Remove(item);
+            }
+        }
+
+        /// <summary>
+        /// Vacía la galería y desmarca todos los dientes, en silencio
+        /// (sin disparar los efectos normales de selección) -- para
+        /// empezar un odontograma nuevo o antes de cargar uno pasado.
+        /// </summary>
+        public void ResetSelection()
+        {
+            _suppressToothSelectionSideEffects = true;
+            foreach (var tooth in AllTeeth())
+                tooth.IsSelected = false;
+            _suppressToothSelectionSideEffects = false;
+
+            CaptureSlots.Clear();
+        }
+
+        /// <summary>
+        /// Carga en la galería las capturas de una sesión ya existente
+        /// (un odontograma pasado, elegido del historial), marcando en
+        /// el odontograma de arriba qué dientes tienen algo capturado.
+        /// Los datos vienen del servidor: ImagePath queda con la URL
+        /// remota (el conversor de imagen ya sabe descargarla), y
+        /// SlotId con el id real para poder editar/borrar cada captura.
+        /// </summary>
+        public void LoadHistoricalSlots(
+            System.Collections.Generic.IEnumerable<(int ToothNumber, string ImageType, bool IsCaptured, string? ImageUrl, string SlotId)> slots)
+        {
+            var slotList = slots.ToList();
+            ResetSelection();
+
+            _suppressToothSelectionSideEffects = true;
+            var toothNumbers = slotList.Select(s => s.ToothNumber).Distinct();
+            foreach (var toothNumber in toothNumbers)
+            {
+                var tooth = AllTeeth().FirstOrDefault(t => t.ToothNumber == toothNumber);
+                if (tooth != null) tooth.IsSelected = true;
+            }
+            _suppressToothSelectionSideEffects = false;
+
+            // Con los dientes ya marcados arriba, se generan las 3
+            // casillas vacías por diente (mismo camino que la selección
+            // manual), y encima se rellenan con los datos reales de
+            // cada captura que sí existe en esta sesión histórica.
+            foreach (var toothNumber in toothNumbers)
+            {
+                var tooth = AllTeeth().First(t => t.ToothNumber == toothNumber);
+                CaptureSlots.Add(new CaptureItem { ToothNumber = toothNumber, DisplayNumber = tooth.DisplayNumber, ImageType = CaptureImageType.Xray });
+                CaptureSlots.Add(new CaptureItem { ToothNumber = toothNumber, DisplayNumber = tooth.DisplayNumber, ImageType = CaptureImageType.Photo });
+                CaptureSlots.Add(new CaptureItem { ToothNumber = toothNumber, DisplayNumber = tooth.DisplayNumber, ImageType = CaptureImageType.Video });
+            }
+
+            foreach (var slot in slotList)
+            {
+                var type = slot.ImageType switch
+                {
+                    "photo" => CaptureImageType.Photo,
+                    "video" => CaptureImageType.Video,
+                    _ => CaptureImageType.Xray,
+                };
+                var item = CaptureSlots.FirstOrDefault(c => c.ToothNumber == slot.ToothNumber && c.ImageType == type);
+                if (item == null) continue;
+
+                item.SlotId = slot.SlotId;
+                item.IsCaptured = slot.IsCaptured;
+                item.ImagePath = slot.ImageUrl;
+                // El video real (el .avi) solo existe en la PC donde se
+                // grabó -- desde el historial solo se ve su miniatura;
+                // VideoPath se deja vacío a propósito.
             }
         }
 

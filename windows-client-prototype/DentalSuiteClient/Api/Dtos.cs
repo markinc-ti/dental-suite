@@ -124,6 +124,9 @@ namespace DentalSuiteClient.Api
         [JsonPropertyName("id")] public string Id { get; set; } = "";
         [JsonPropertyName("patient_id")] public string PatientId { get; set; } = "";
         [JsonPropertyName("dentition_type")] public string DentitionType { get; set; } = "permanent";
+        [JsonPropertyName("description")] public string? Description { get; set; }
+        [JsonPropertyName("taken_at")] public DateTime TakenAt { get; set; }
+        [JsonPropertyName("sensor_brand")] public string? SensorBrand { get; set; }
         [JsonPropertyName("slots")] public ToothImageSlotDto[] Slots { get; set; } = Array.Empty<ToothImageSlotDto>();
     }
 }

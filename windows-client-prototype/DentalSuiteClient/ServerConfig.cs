@@ -47,6 +47,22 @@ namespace DentalSuiteClient
             File.WriteAllText(ConfigPath, JsonSerializer.Serialize(data));
         }
 
+        /// <summary>Olvida el servidor configurado — la próxima vez que
+        /// abra la app, va a preguntar de nuevo (local o en la nube).</summary>
+        public static void Clear()
+        {
+            try
+            {
+                if (File.Exists(ConfigPath))
+                    File.Delete(ConfigPath);
+            }
+            catch
+            {
+                // Si no se puede borrar, no es crítico — seguirá usando
+                // la configuración anterior hasta que se logre.
+            }
+        }
+
         /// <summary>Es "modo local" si la URL guardada apunta a esta
         /// misma máquina — a diferencia de un servidor en la nube, que
         /// nunca es 127.0.0.1/localhost.</summary>

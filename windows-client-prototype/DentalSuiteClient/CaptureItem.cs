@@ -7,13 +7,14 @@ namespace DentalSuiteClient
     {
         Xray,
         Photo,
+        Video,
     }
 
     /// <summary>
     /// Una casilla de captura en la galería: un diente + un tipo de
-    /// imagen (radiografía o foto). Cada diente seleccionado en el
-    /// odontograma genera DOS de estas — una para cada tipo — para que
-    /// se puedan capturar y comparar por separado.
+    /// imagen (radiografía, foto o video). Cada diente seleccionado en
+    /// el odontograma genera una de estas por tipo, para que se puedan
+    /// capturar y comparar por separado.
     /// </summary>
     public sealed class CaptureItem : INotifyPropertyChanged
     {
@@ -21,7 +22,18 @@ namespace DentalSuiteClient
         public int DisplayNumber { get; init; }
         public CaptureImageType ImageType { get; init; }
 
-        public string TypeLabel => ImageType == CaptureImageType.Xray ? "Radiografía" : "Foto";
+        /// <summary>Id del registro en el servidor, una vez subido (null
+        /// mientras no se haya sincronizado, por ejemplo sin internet).
+        /// Se necesita para poder borrar o re-editar esta captura
+        /// específica más adelante.</summary>
+        public string? SlotId { get; set; }
+
+        public string TypeLabel => ImageType switch
+        {
+            CaptureImageType.Xray => "Radiografía",
+            CaptureImageType.Video => "Video",
+            _ => "Foto",
+        };
 
         private bool _isCaptured;
         public bool IsCaptured
@@ -35,6 +47,20 @@ namespace DentalSuiteClient
         {
             get => _imagePath;
             set { _imagePath = value; OnPropertyChanged(); }
+        }
+
+        /// <summary>
+        /// Solo para ImageType == Video: ruta del archivo .avi real. La
+        /// miniatura que se ve en la galería (ImagePath) es una imagen
+        /// del primer cuadro del video, para que use la misma vista que
+        /// las demás casillas -- esta ruta es la que se abre al hacer
+        /// doble clic.
+        /// </summary>
+        private string? _videoPath;
+        public string? VideoPath
+        {
+            get => _videoPath;
+            set { _videoPath = value; OnPropertyChanged(); }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

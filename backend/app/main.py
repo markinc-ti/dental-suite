@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-import os
 
+from . import paths
 from .database import engine
+from .schema_upgrade import add_missing_columns
 from .models import Base
 from .routers import appointments, auth, clinical_notes, clinics, invoices, patients, studies, treatments, uploads, users
 
@@ -31,8 +32,9 @@ app.add_middleware(
 # conviene mover esto a un almacenamiento persistente (S3, Cloudinary,
 # un Persistent Disk de Render, etc.). Para empezar y probar, esto
 # ya deja el flujo completo funcionando de punta a punta.
-UPLOADS_DIR = os.path.join(os.path.dirname(__file__), "..", "uploads")
-os.makedirs(UPLOADS_DIR, exist_ok=True)
+# Las imágenes viven en la carpeta de datos (ver app/paths.py), NO en la
+# carpeta del programa — así una reinstalación no las borra.
+UPLOADS_DIR = paths.UPLOADS_DIR
 
 app.include_router(clinics.router)
 app.include_router(auth.router)
@@ -57,6 +59,9 @@ def on_startup():
     # En desarrollo crea las tablas automáticamente; en producción usar
     # migraciones (Alembic) en vez de create_all.
     Base.metadata.create_all(bind=engine)
+    # Columnas nuevas de versiones recientes se agregan solas a una base
+    # de datos existente, sin perder nada de lo capturado.
+    add_missing_columns(engine, Base.metadata)
 
 
 @app.get("/health")

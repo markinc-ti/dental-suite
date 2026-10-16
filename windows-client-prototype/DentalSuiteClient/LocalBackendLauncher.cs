@@ -17,6 +17,10 @@ namespace DentalSuiteClient
     {
         public const string LocalBaseUrl = "http://127.0.0.1:8003";
 
+        /// <summary>%LOCALAPPDATA%\DentalSuite — no se toca al reinstalar.</summary>
+        public static string DataDirectory => Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DentalSuite");
+
         public static async Task<bool> IsRunningAsync()
         {
             try
@@ -54,6 +58,10 @@ namespace DentalSuiteClient
                 UseShellExecute = false,
                 CreateNoWindow = true,
             };
+            // Todos los datos (base de datos, fotos subidas, respaldos)
+            // van FUERA de la carpeta del programa, para que reinstalar
+            // o actualizar Dental Suite nunca los borre.
+            startInfo.Environment["DENTALSUITE_DATA_DIR"] = DataDirectory;
             Process.Start(startInfo);
         }
 

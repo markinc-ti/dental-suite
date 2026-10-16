@@ -22,4 +22,12 @@
     <ProjectReference Include="..\UvcCameraPrototype\UvcCameraPrototype.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Para grabar video de la cámara intraoral: librería NuGet
+         estable y bien probada, en vez de escribir el contenedor AVI a
+         mano (formato binario delicado, alto riesgo de un archivo
+         corrupto sin poder probarlo antes de entregarlo). -->
+    <PackageReference Include="SharpAvi" Version="2.1.0" />
+  </ItemGroup>
+
 </Project>

@@ -25,28 +25,42 @@ namespace DentalSuiteClient
                 }
             }
 
-            // Dental Suite puede trabajar de dos formas: sola en esta PC
-            // (backend local, sin configurar nada — para quien no
-            // necesita conectar el celular ni otra computadora), o
-            // conectada a un servidor central en la nube (para quien sí
-            // quiere eso). La primera vez se pregunta cuál quiere.
+            // Dental Suite trabaja PRIMERO en esta PC (backend local +
+            // base de datos SQLite en %LOCALAPPDATA%\DentalSuite): no
+            // necesita internet para funcionar, y esos datos no se tocan
+            // al reinstalar. El servidor en la nube queda solo como
+            // opción para quien la configure a propósito.
             string? savedUrl = ServerConfig.GetSavedBaseUrl();
             if (savedUrl == null)
             {
-                var serverSetup = new ServerSetupWindow();
-                bool? connected = serverSetup.ShowDialog();
-                if (connected != true)
+                // Primera vez: modo local directo, sin preguntar nada.
+                ServerConfig.SaveBaseUrl(LocalBackendLauncher.LocalBaseUrl);
+                savedUrl = LocalBackendLauncher.LocalBaseUrl;
+            }
+            else if (!ServerConfig.IsLocalUrl(savedUrl) && !await CloudServerReachableAsync(savedUrl))
+            {
+                // Estaba configurada contra la nube y no hay conexión:
+                // en vez de no poder abrir la app, se ofrece trabajar en
+                // modo local.
+                var answer = MessageBox.Show(
+                    "No hay conexión con el servidor en la nube:\n" + savedUrl + "\n\n"
+                    + "¿Cambiar esta computadora a modo LOCAL (funciona sin internet)?\n\n"
+                    + "Sí = trabajar en esta PC desde ahora.\n"
+                    + "No = salir e intentar más tarde.",
+                    "Sin conexión", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (answer != MessageBoxResult.Yes)
                 {
                     Shutdown();
                     return;
                 }
-                savedUrl = ServerConfig.GetSavedBaseUrl();
+                ServerConfig.SaveBaseUrl(LocalBackendLauncher.LocalBaseUrl);
+                savedUrl = LocalBackendLauncher.LocalBaseUrl;
             }
-            else if (ServerConfig.IsLocalUrl(savedUrl))
+
+            if (ServerConfig.IsLocalUrl(savedUrl))
             {
-                // Modo "solo esta PC": hay que asegurarse de que el
-                // backend local esté corriendo en cada arranque (no solo
-                // la primera vez que se configuró).
+                // Hay que asegurarse de que el backend local esté
+                // corriendo en cada arranque.
                 if (!await LocalBackendLauncher.IsRunningAsync())
                 {
                     try
@@ -60,7 +74,7 @@ namespace DentalSuiteClient
                         return;
                     }
 
-                    bool ready = await LocalBackendLauncher.WaitUntilReadyAsync(TimeSpan.FromSeconds(15));
+                    bool ready = await LocalBackendLauncher.WaitUntilReadyAsync(TimeSpan.FromSeconds(30));
                     if (!ready)
                     {
                         MessageBox.Show(
@@ -107,6 +121,22 @@ namespace DentalSuiteClient
 
             var patientSelector = new PatientSelectorWindow();
             patientSelector.Show();
+        }
+
+        /// <summary>El plan gratuito de Render tarda hasta ~1 minuto en
+        /// "despertar", por eso el tiempo de espera es largo.</summary>
+        private static async System.Threading.Tasks.Task<bool> CloudServerReachableAsync(string baseUrl)
+        {
+            try
+            {
+                using var client = new System.Net.Http.HttpClient { Timeout = TimeSpan.FromSeconds(60) };
+                var response = await client.GetAsync($"{baseUrl.TrimEnd('/')}/health");
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

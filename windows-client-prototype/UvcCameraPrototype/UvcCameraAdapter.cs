@@ -53,10 +53,12 @@ namespace UvcCameraPrototype
             _device = null;
         }
 
-        public CapturedImage CaptureImage()
+        public CapturedImage CaptureImage(Action<string>? onStatus = null, System.Threading.CancellationToken cancellationToken = default)
         {
             if (_device == null)
                 throw new InvalidOperationException("La cámara intraoral no está conectada.");
+
+            onStatus?.Invoke("Tomando foto...");
 
             _pendingFrame = new TaskCompletionSource<Bitmap>();
             _device.NewFrame += OnNewFrame;

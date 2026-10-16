@@ -157,6 +157,12 @@ namespace DentalSuiteClient.Api
             return (await response.Content.ReadFromJsonAsync<ToothImageSlotDto>())!;
         }
 
+        public async Task DeleteSlotAsync(string slotId)
+        {
+            var response = await _http.DeleteAsync($"/xray-studies/slots/{slotId}");
+            await response.EnsureSuccessWithDetailAsync();
+        }
+
         public async Task<UserDto?> LoginAsync(string username, string password)
         {
             var response = await _http.PostAsJsonAsync("/auth/login", new { username, password });

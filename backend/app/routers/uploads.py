@@ -3,10 +3,9 @@ import uuid
 
 from fastapi import APIRouter, File, UploadFile
 
-router = APIRouter(prefix="/uploads", tags=["uploads"])
+from ..paths import UPLOADS_DIR
 
-UPLOADS_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "uploads")
-os.makedirs(UPLOADS_DIR, exist_ok=True)
+router = APIRouter(prefix="/uploads", tags=["uploads"])
 
 
 @router.post("/image")

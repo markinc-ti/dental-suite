@@ -12,3 +12,6 @@ backend/uploads/
 # Windows / editor
 *.user
 .vs/
+
+# Python
+__pycache__/

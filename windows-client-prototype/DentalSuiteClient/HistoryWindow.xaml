@@ -1,0 +1,25 @@
+<Window x:Class="DentalSuiteClient.HistoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Historial de odontogramas" Height="450" Width="420"
+        WindowStartupLocation="CenterOwner">
+    <DockPanel Margin="16">
+        <TextBlock DockPanel.Dock="Top" x:Name="TitleText" FontWeight="Bold" FontSize="15" Margin="0,0,0,12"/>
+
+        <Button DockPanel.Dock="Bottom" Content="Cerrar" Height="32" Margin="0,12,0,0" Click="OnCloseClick"/>
+
+        <TextBlock x:Name="EmptyText" DockPanel.Dock="Bottom" Text="Este paciente todavía no tiene odontogramas."
+                   Foreground="Gray" Margin="0,0,0,8" Visibility="Collapsed"/>
+
+        <ListBox x:Name="StudiesList" MouseDoubleClick="OnStudyDoubleClick">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="4">
+                        <TextBlock Text="{Binding DateLabel}" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding SummaryLabel}" Foreground="Gray" FontSize="11"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DockPanel>
+</Window>

@@ -1,10 +1,10 @@
 <Window x:Class="DentalSuiteClient.ImageAnnotationWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Ver / anotar imagen" Height="750" Width="1000"
+        Title="Ver / anotar imagen" Height="750" Width="1200"
         WindowStartupLocation="CenterScreen">
     <DockPanel Margin="10">
-        <!-- Barra de herramientas -->
+        <!-- Barra de herramientas de anotación -->
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
             <ToggleButton x:Name="DrawToolButton" Content="✏ Dibujar" Padding="10,6" Margin="0,0,4,0" Click="OnToolSelected"/>
             <ToggleButton x:Name="RectangleToolButton" Content="▭ Cuadro" Padding="10,6" Margin="0,0,4,0" Click="OnToolSelected"/>
@@ -28,6 +28,39 @@
             <Button Content="Cerrar sin guardar" Width="140" Height="32" Click="OnCloseWithoutSavingClick"/>
             <Button Content="Guardar" Width="110" Height="32" Margin="8,0,0,0" Click="OnSaveClick"/>
         </StackPanel>
+
+        <!-- Panel de ajuste de imagen, a la derecha (equivalente al
+             panel "Área de funciones" de HandyImage) -->
+        <ScrollViewer DockPanel.Dock="Right" Width="220" Margin="10,0,0,0" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="Ajuste de imagen" FontWeight="Bold" FontSize="15" Margin="0,0,0,10"/>
+
+                <TextBlock Text="Brillo" Margin="0,8,0,0"/>
+                <Slider x:Name="BrightnessSlider" Minimum="-100" Maximum="100" Value="0"
+                        ValueChanged="OnAdjustmentChanged" TickFrequency="10"/>
+
+                <TextBlock Text="Contraste" Margin="0,8,0,0"/>
+                <Slider x:Name="ContrastSlider" Minimum="-100" Maximum="100" Value="0"
+                        ValueChanged="OnAdjustmentChanged" TickFrequency="10"/>
+
+                <TextBlock Text="Afilar (realce de bordes)" Margin="0,8,0,0"/>
+                <Slider x:Name="SharpenSlider" Minimum="0" Maximum="3" Value="0"
+                        ValueChanged="OnAdjustmentChanged" TickFrequency="0.5"/>
+
+                <TextBlock Text="Suavizar (reducir ruido)" Margin="0,8,0,0"/>
+                <Slider x:Name="SmoothSlider" Minimum="0" Maximum="5" Value="0"
+                        ValueChanged="OnAdjustmentChanged" TickFrequency="1" IsSnapToTickEnabled="True"/>
+
+                <CheckBox x:Name="NegativeCheckBox" Content="Negativo" Margin="0,16,0,0"
+                          Checked="OnAdjustmentChanged" Unchecked="OnAdjustmentChanged"/>
+
+                <Button Content="Estandarización automática" Margin="0,16,0,0" Padding="6"
+                        Click="OnAutoStandardizeClick"/>
+
+                <Button Content="Restablecer todo" Margin="0,8,0,0" Padding="6"
+                        Click="OnResetAdjustmentsClick"/>
+            </StackPanel>
+        </ScrollViewer>
 
         <Border Background="Black" BorderBrush="Gray" BorderThickness="1">
             <Grid x:Name="ImageHost" ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Center">

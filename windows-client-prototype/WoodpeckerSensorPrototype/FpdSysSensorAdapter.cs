@@ -40,10 +40,12 @@ namespace WoodpeckerSensorPrototype
             }
         }
 
-        public CapturedImage CaptureImage()
+        public CapturedImage CaptureImage(Action<string>? onStatus = null, System.Threading.CancellationToken cancellationToken = default)
         {
             if (_handle == IntPtr.Zero)
                 throw new InvalidOperationException("El sensor Woodpecker (FpdSys) no está conectado.");
+
+            onStatus?.Invoke("Esperando disparo de rayos X...");
 
             int scanResult = FpdSysInterop.ScanOnce(_handle);
             if (scanResult != 0 && scanResult != 1)
